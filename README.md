@@ -1,6 +1,7 @@
 # GitHarvester
 <pre>
-$ ./githarvest.py -h
+$ pip install githarvester
+$ githarvest -h
 
   _____ _ _     _    _                           _
  / ____(_) |   | |  | |                         | |
@@ -9,7 +10,7 @@ $ ./githarvest.py -h
 | |__| | | |_  | |  | | (_| | |   \ V /  __/\__ \ ||  __/ |
  \_____|_|\__| |_|  |_|\__,_|_|    \_/ \___||___/\__\___|_|
 
-Version 0.7.1
+Version 0.7.2
 By: @metacortex of @dc801
 
 usage: githarvest.py [-h] [-d DIRECTORY] [-o ORGANIZE] [-r CUSTOM_REGEX]

@@ -1,49 +1,28 @@
-#!/usr/bin/env python
-
 # Import all the things!
 import sys
 import os
-try:
-  import argparse
-except:
-  print '[!] argparse is not installed. Try "pip install argparse"'
-  sys.exit(0)
-try:
-  from urllib import urlopen
-  from urllib import urlretrieve
-  from urllib import urlencode
-except:
-  print '[!] urllib is not installed. Try "pip install urllib"'
-  sys.exit(0)
-try:
-  from bs4 import BeautifulSoup
-except:
-  print '[!] BeautifulSoup is not installed. Try "pip install beautifulsoup4"'
-  sys.exit(0)
-try:
-  import re
-except:
-  print '[!] re is not installed. Try "pip install re"'
-  sys.exit(0)
-try:
-  import pycurl
-except:
-  print '[!] pycurl is not installed. Try "pip install pycurl"'
-  sys.exit(0)
+import argparse
+import re
+import pycurl
+from urllib.request import urlopen
+from urllib.request import urlretrieve
+from urllib.parse import urlencode
+from bs4 import BeautifulSoup
+from githarvester import __version__
 
 # Display Startup Banner
 def banner():
-  print ""
-  print "  _____ _ _     _    _                           _"
-  print " / ____(_) |   | |  | |                         | |"
-  print "| |  __ _| |_  | |__| | __ _ _ ____   _____  ___| |_ ___ _ __ "
-  print "| | |_ | | __| |  __  |/ _` | '__\ \ / / _ \/ __| __/ _ \ '__|"
-  print "| |__| | | |_  | |  | | (_| | |   \ V /  __/\__ \ ||  __/ |   "
-  print " \_____|_|\__| |_|  |_|\__,_|_|    \_/ \___||___/\__\___|_|   "
-  print ""
-  print "Version 0.7.2"
-  print "By: @metacortex of @dc801"
-  print ""
+  print("")
+  print("  _____ _ _     _    _                           _")
+  print(" / ____(_) |   | |  | |                         | |")
+  print("| |  __ _| |_  | |__| | __ _ _ ____   _____  ___| |_ ___ _ __ ")
+  print("| | |_ | | __| |  __  |/ _` | '__\ \ / / _ \/ __| __/ _ \ '__|")
+  print("| |__| | | |_  | |  | | (_| | |   \ V /  __/\__ \ ||  __/ |   ")
+  print(" \_____|_|\__| |_|  |_|\__,_|_|    \_/ \___||___/\__\___|_|   ")
+  print("")
+  print("Version %s" % __version__)
+  print("By: @metacortex of @dc801")
+  print("")
 
 # Parse GitHub search results
 def githubsearch(search, regex, order, sort):
@@ -53,14 +32,14 @@ def githubsearch(search, regex, order, sort):
   githubsearchurl = {'o' : order, 'q' : search, 's' : sort, 'type' : 'Code', 'ref' : 'searchresults'}
   searchurl = githubbase + str(urlencode(githubsearchurl))
   if (order == 'asc'):
-    print '[+] Searching Github for ' + search + ' and ordering by OLDEST'
-    print searchurl
+    print('[+] Searching Github for ' + search + ' and ordering by OLDEST')
+    print(searchurl)
   elif (order == 'desc'):
-    print '[+] Searching Github for ' + search + ' and ordering by NEWEST'
-    print searchurl
+    print('[+] Searching Github for ' + search + ' and ordering by NEWEST')
+    print(searchurl)
   else:
-    print '[+] Searching Github for ' + search + ' and ordering by BEST MATCH'
-    print searchurl
+    print('[+] Searching Github for ' + search + ' and ordering by BEST MATCH')
+    print(searchurl)
   searchresults = urlopen(searchurl).read()
   soup = BeautifulSoup(searchresults, 'html.parser')
 
@@ -73,9 +52,9 @@ def githubsearch(search, regex, order, sort):
   try:
     totalpages = int(str(re.findall(r">.*</a>", str(navbarlinks[-2]))).strip('[').strip(']').strip('\'').strip('>').strip('</a>'))  # Because I suck at code
   except IndexError:
-    print '  [!] Search error'
+    print('  [!] Search error')
     sys.exit(0)
-  print '  [+] Returned ' + str(totalpages) + ' total pages'
+  print('  [+] Returned ' + str(totalpages) + ' total pages')
 
   # Parse each page of results
   currentpage = 1
@@ -84,7 +63,7 @@ def githubsearch(search, regex, order, sort):
     currentpage += 1
 
 def parseresultpage(page, search, order, sort, regex):
-  print '    [+] Pulling results from page ' + str(page)
+  print('    [+] Pulling results from page ' + str(page))
   githubbase = 'https://github.com/search?'
   githubsearchurl = {'o' : order, 'p' : page, 'q' : search, 's' : sort, 'type' : 'Code', 'ref' : 'searchresults'}
   searchurl = githubbase + str(urlencode(githubsearchurl))
@@ -117,10 +96,10 @@ def searchcode(url, regex):
     result = str(regexresults.group(0))
     if result is not None:
       if (args.url == True):
-        print "        " + str(url)
+        print("        " + str(url))
       if (args.verbose == True):
-        print "      [+] Found the following results"
-        print "        " + str(result)
+        print("      [+] Found the following results")
+        print("        " + str(result))
       if args.write_file:
         if (result == ''):
           pass
@@ -134,7 +113,7 @@ def searchcode(url, regex):
         filename = args.directory + "/" + url.replace('/', '-')
         if not os.path.exists(args.directory):
           os.makedirs(args.directory)
-        print "        [+] Downloading " + filename
+        print("        [+] Downloading " + filename)
         urlretrieve(url, filename)
         fp = open(filename, 'wb')
         fp.write(code)
@@ -167,13 +146,13 @@ def wpsearchcode(url, regex):
       host = ''
 
     if (args.verbose == True):
-      print '      [+] Found the following credentials'
+      print('      [+] Found the following credentials')
       if (args.url == True):
-        print '        ' + str(url)
-      print '        database: ' + db
-      print '        user: ' + user
-      print '        password: ' + password
-      print '        host: ' + host
+        print('        ' + str(url))
+      print('        database: ' + db)
+      print('        user: ' + user)
+      print('        password: ' + password)
+      print('        host: ' + host)
 
     if args.write_file:
       f = open(args.write_file, 'a')
@@ -205,16 +184,16 @@ def main():
 
   if args.custom_search:
     search = args.custom_search
-    print '[+] Custom search is: ' + str(search)
+    print('[+] Custom search is: ' + str(search))
   else:
     search = 'filename:wp-config.php'
-    print '[+] Using default search'
+    print('[+] Using default search')
   if args.custom_regex:
     regex = args.custom_regex
-    print '[+] Custom regex is: ' + str(regex)
+    print('[+] Custom regex is: ' + str(regex))
   else:
     regex = 'regexhere'
-    print '[+] Using default regex'
+    print('[+] Using default regex')
 
 
   if (args.organize == 'new'):
@@ -230,10 +209,10 @@ def main():
   else:
     githubsearch(search, regex, '', '')
 
-  print '[+] DONE'
+  print('[+] DONE')
 
 try:
   if __name__ == "__main__":
     main()
 except KeyboardInterrupt:
-  print "[!] Keyboard Interrupt. Shutting down"
+  print("[!] Keyboard Interrupt. Shutting down")
